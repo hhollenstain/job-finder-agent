@@ -1,0 +1,6 @@
+/data/
+/config.yaml
+/jobfinder
+*.db
+*.db-wal
+*.db-shm

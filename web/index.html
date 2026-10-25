@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Finder</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%230f7a4f' width='32' height='32' rx='8'/%3E%3Cpath d='M8 22V10h3.2l3.3 7.2L17.8 10H21v12h-2.4v-7.4L15.6 22h-2.2l-2.9-7.4V22z' fill='%23f7fbf8'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">JF</span>
+      <strong>Job Finder</strong>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" data-view="jobs" class="active">Jobs</button>
+      <button type="button" data-view="sources">Sources</button>
+      <button type="button" data-view="profile">Profile</button>
+    </nav>
+    <div class="top-actions">
+      <label class="check" title="Refetch listings even when they were saved recently"><input id="force" type="checkbox"> Skip cache</label>
+      <button id="run" class="primary" type="button">Run search</button>
+      <div class="menu">
+        <button id="settings" class="gear" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M19.4 13.5a7.7 7.7 0 0 0 .1-1.5 7.7 7.7 0 0 0-.1-1.5l2-1.6a.5.5 0 0 0 .1-.6l-1.9-3.3a.5.5 0 0 0-.6-.2l-2.4 1a7.4 7.4 0 0 0-2.6-1.5l-.4-2.5a.5.5 0 0 0-.5-.4h-3.8a.5.5 0 0 0-.5.4l-.4 2.5a7.4 7.4 0 0 0-2.6 1.5l-2.4-1a.5.5 0 0 0-.6.2L2.4 8.3a.5.5 0 0 0 .1.6l2 1.6a7.7 7.7 0 0 0-.1 1.5 7.7 7.7 0 0 0 .1 1.5l-2 1.6a.5.5 0 0 0-.1.6l1.9 3.3a.5.5 0 0 0 .6.2l2.4-1a7.4 7.4 0 0 0 2.6 1.5l.4 2.5a.5.5 0 0 0 .5.4h3.8a.5.5 0 0 0 .5-.4l.4-2.5a7.4 7.4 0 0 0 2.6-1.5l2.4 1a.5.5 0 0 0 .6-.2l1.9-3.3a.5.5 0 0 0-.1-.6l-2-1.6zM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z"/>
+          </svg>
+        </button>
+        <div id="settings-menu" class="menu-pop" role="menu" hidden>
+          <button type="button" role="menuitem" data-view="schedule">Schedule</button>
+          <button type="button" role="menuitem" data-view="context">Context</button>
+          <button type="button" role="menuitem" data-view="model">Model</button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <main id="main"></main>
+  <script src="/app.js"></script>
+</body>
+</html>

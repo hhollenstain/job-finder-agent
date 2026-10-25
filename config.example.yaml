@@ -1,0 +1,61 @@
+# Copy to config.yaml before the first launch to seed the database.
+# After that, the web UI is the source of truth.
+
+addr: 127.0.0.1:8787
+data_dir: data
+
+profile:
+  notes: |
+    Backend engineer. Prefer Go, a product the company can explain, and a role
+    that says what the team actually owns.
+  keywords: [go, golang, backend]
+  must_have: []
+  exclude: [unpaid, internship]
+  locations: []
+  remote_only: false
+  include_remote: true
+  min_salary: 0
+  min_score: 70
+  employment_types: []
+
+settings:
+  schedule: ""
+  timezone: Local
+  score_with_llm: false
+  auto_research: false
+  expand_sources: false
+  max_llm_jobs: 25
+  cache_hours: 6
+  llm:
+    provider: ollama
+    base_url: http://127.0.0.1:11434/v1
+    model: llama3.2
+    api_key: ""
+  kiwi:
+    enabled: false
+    base_url: http://127.0.0.1:3333
+    api_key: ""
+    space: ""
+    path_prefix: job-search
+
+sources:
+  - id: remotive
+    kind: remotive
+    name: Remotive
+    enabled: true
+    config: {}
+  - id: remoteok
+    kind: remoteok
+    name: Remote OK
+    enabled: true
+    config: {}
+  - id: arbeitnow
+    kind: arbeitnow
+    name: Arbeitnow
+    enabled: true
+    config: {}
+  - id: linkedin
+    kind: linkedin
+    name: LinkedIn
+    enabled: true
+    config: {}
