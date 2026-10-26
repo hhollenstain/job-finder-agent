@@ -372,11 +372,10 @@ func (s *Store) UpsertJob(j model.Job) (UpsertResult, error) {
 		}
 	}()
 
-	var existingFP, existingID string
+	var existingID string
 	err = tx.QueryRow(`SELECT id FROM jobs WHERE fingerprint = ? AND source_id != ? LIMIT 1`,
-		j.Fingerprint, j.SourceID).Scan(&existingFP)
+		j.Fingerprint, j.SourceID).Scan(&existingID)
 	if err == nil {
-		existingID = existingFP
 		_, _ = tx.Exec(`UPDATE jobs SET last_seen = ? WHERE id = ?`, stamp(j.LastSeen), existingID)
 		if err := tx.Commit(); err != nil {
 			return UpsertResult{}, err
