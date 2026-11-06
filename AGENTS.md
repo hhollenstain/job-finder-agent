@@ -60,3 +60,23 @@ The agent lifecycle begins when `Start()` is called, which:
 7. Synchronizes with external systems
 
 Each run is managed through a `Run` struct that tracks progress, status, and results.
+
+## Component Interactions
+
+The agent components work together in a specific sequence:
+
+1. **Fetch Phase**: The `fetchAll` function concurrently fetches jobs from all enabled sources. Each source is fetched in parallel using a semaphore to limit concurrent requests.
+
+2. **Filter Phase**: After fetching, candidates are filtered using `filter.Decide()` based on the user profile criteria. This determines which jobs pass the initial filter and are considered for scoring.
+
+3. **Expand Phase**: If enabled (`settings.ExpandSources`), the `expand` component analyzes the filtering results. When too few jobs pass the initial filter, it uses an LLM to suggest additional job sources that might be suitable for the user profile.
+
+4. **Scoring Phase**: If LLM scoring is enabled (`settings.ScoreWithLLM`), the `score` component is invoked using `a.score()`. This scores all passing candidates (after filtering and potentially expansion) using LLM analysis of their fit with user profile. The scoring component prioritizes candidates based on rankCandidate function to optimize LLM usage.
+
+5. **Storage Phase**: Filtered and scored jobs are saved to the local database through `a.store.UpsertJob()`. The results from this operation determine if new jobs were discovered or if duplicates were found.
+
+6. **Research Phase**: If automatic research is enabled (`settings.AutoResearch`) and LLM scoring was used, `autoResearch` is called to perform detailed research on promising matches, enriching them with additional information. This happens after scoring but before synchronization.
+
+7. **Sync Phase**: Finally, the `Sync()` function synchronizes all local database changes with external systems (like KiwiFS), ensuring persistence across agent runs.
+
+The interaction logic is: fetch → filter → expand (if enabled) → score (if enabled) → store → research (if enabled) → sync.
