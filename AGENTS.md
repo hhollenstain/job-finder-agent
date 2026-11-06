@@ -59,6 +59,19 @@ The binary is pure Go. `CGO_ENABLED=0` is fine.
 4. **Optionally asks the model to add up to three public sources** when fewer than eight roles pass the rules
 5. **Writes a markdown context pack** to `data/context/job-search/`
 
+### Agent Lifecycle
+
+The Job Finder agent operates through a carefully orchestrated 8-step execution process:
+
+1. **Initialize Run** - Creates a new run record in the database with start time and trigger information
+2. **Fetch Jobs** - Concurrently retrieves job postings from all enabled sources using caching to avoid redundant API calls  
+3. **Filter Candidates** - Applies user-defined profile criteria to determine which jobs meet basic requirements
+4. **Score Opportunities** - When enabled, uses LLMs to assign quality scores to promising candidates based on profile alignment
+5. **Expand Sources** - Analyzes results and automatically adds up to 3 new public sources when fewer than 8 roles pass filtering rules  
+6. **Store Results** - Persists matched jobs to the local database with full context information including scores, pros/cons, and fit summaries
+7. **Research Promising Jobs** - When enabled, performs additional analysis on scored jobs to gather more detailed information
+8. **Sync Context** - Synchronizes results to KiwiFS knowledge base (if configured) for persistent storage and long-term analysis
+
 ### Job Sources
 
 | Kind | Needs a key | Notes |
