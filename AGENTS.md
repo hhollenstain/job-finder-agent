@@ -1,69 +1,62 @@
-# Agents
+# Agent Architecture
 
-This project uses a sophisticated agent-based architecture to search for and process job listings. The agents are responsible for fetching job data from various sources, filtering it according to user profiles, scoring relevant opportunities, and conducting research on promising candidates.
+The job-finder-agent is a sophisticated searching system that coordinates multiple components to find and evaluate job opportunities based on user profiles. The core of this system is the `Agent` struct, which orchestrates the entire job search process.
 
-## Agent Components
+## Main Agent Structure
 
-### Main Agent Structure
-The core `Agent` structure coordinates all operations, managing the interaction between various components including:
-- Data storage (via `store`)
-- Job sources (via `source`)
-- Filtering logic (via `filter`)
-- LLM-based scoring systems (via `llm`)
-- Context management and research (via `kiwi`)
+The `Agent` struct in `internal/agent/agent.go` is the central coordinator that manages:
+- Job sourcing from various sources
+- Filtering mechanisms based on user profiles
+- LLM-powered scoring and research
+- Data storage and synchronization with external systems
 
-### Core Operations
-
-1. **Fetch** - Retrieves job listings from configured sources using `fetchAll` and `fetchOne`
-2. **Filter** - Applies user-defined profile criteria to determine initial matches
-3. **Expand** - Optionally expands search to additional sources based on initial results
-4. **Score** - Uses LLM-based systems to rank promising job opportunities
-5. **Research** - Performs in-depth analysis of selected jobs using public information
-
-## Agent Lifecycle
-
-The agent operates through a well-defined lifecycle:
-1. Start execution with `Start()` method
-2. Fetch all available job listings from configured sources
-3. Filter initial results based on user profile criteria
-4. Optionally expand search to additional sources
-5. Score promising candidates using LLM-based system 
-6. Research selected opportunities for deeper insights
-7. Store results and update context
-
-## Key Agent Functions
-
-### Agent Structure
 ```go
 type Agent struct {
     store   *store.Store
     dataDir string
+
     mu      sync.Mutex
     running bool
 }
 ```
 
-### Main Execution Flow
-- `Start()` - Initiates a new search run with trigger information
-- `execute()` - Runs the complete search lifecycle (fetch → filter → score → research → store)
-- `fetchAll()` - Concurrently fetches from multiple sources
-- `fetchOne()` - Fetches from a single source with caching
+## Core Components
 
-### Scoring and Filtering
-- `score()` - Uses LLM to score job opportunities based on profile criteria
-- `ResearchJob()` - Conducts in-depth research on selected jobs using public information
-- `autoResearch()` - Automatically conducts research on new matches
-- `rankCandidate()` - Ranks candidates for optimal scoring evaluation
+### Research
+The `research` component fetches public job posting information and uses an LLM to analyze each position against the user's profile. This provides additional context that helps with decision-making.
 
-### Context Management
-The agent integrates with a Kiwi context system to provide additional workspace knowledge during LLM interactions, enhancing the quality of job recommendations.
+Key functions:
+- `ResearchJob(ctx context.Context, id string)`: Analyzes a specific job posting 
+- `autoResearch(ctx context.Context, settings model.Settings, profile model.Profile)`: Automatically researches newly matched jobs
 
-## Decision Making Process
+### Expand
+The `expand` component uses LLMs to identify and add new job sources when the initial search results are too sparse. This helps diversify the job search and find opportunities that might have been missed.
 
-The agent implements a multi-layered approach to decision making:
-1. Initial filtering based on user profile criteria
-2. LLM-based scoring for promising candidates (configurable threshold)
-3. Optional research for deeper insights into top matches
-4. Final storage and context updating
+Key functions:
+- `expand(ctx context.Context, settings model.Settings, profile model.Profile, existing []model.Source, passCount int)`: Adds new sources based on profile criteria
+- `sourceFromTool(raw string, now time.Time)`: Converts tool responses into source configurations
 
-This architecture allows for flexible job searching with deep analysis capabilities, leveraging both traditional filtering approaches and advanced AI-driven scoring systems.
+### Score
+The `score` component applies LLM-powered scoring to evaluated job opportunities. This helps prioritize jobs that are most likely to be of interest to the user.
+
+Key functions:
+- `score(ctx context.Context, settings model.Settings, profile model.Profile, cands []candidate)`: Applies LLM-based scoring to candidates
+
+### Sync
+The `sync` component handles synchronization with external systems (like KiwiFS) to persist job data and maintain consistency across multiple runs.
+
+Key function:
+- `Sync(ctx context.Context)`: Synchronizes the local database with remote storage systems
+
+## Agent Lifecycle
+
+The agent lifecycle begins when `Start()` is called, which:
+1. Records a new run in the database
+2. Fetches jobs from configured sources (with caching)
+3. Filters jobs based on user profile criteria
+4. Optionally scores jobs using LLMs
+5. Saves job data to the local store
+6. Performs automatic research on promising matches  
+7. Synchronizes with external systems
+
+Each run is managed through a `Run` struct that tracks progress, status, and results.
