@@ -1,78 +1,93 @@
-# Agents
+# Job Finder Agent
 
-The agent system is responsible for searching, filtering, and scoring job listings. Each agent coordinates between data sources, the LLM model, and the context filesystem to find matching opportunities based on user profiles and settings.
+The job finder agent is responsible for automating the process of searching for jobs, filtering them based on user preferences, and optionally scoring and researching job postings.
 
-## Agent Components
+## Architecture
+
+The agent coordinates between multiple components:
+- **Sources**: Job boards and feeds that provide job listings
+- **Filter**: Decision engine that applies user-defined filters to determine job suitability
+- **Score**: LLM-based scoring system for ranking job opportunities
+- **Research**: System for fetching additional information about jobs and generating briefings
+
+## Main Agent Structure
+
+The `Agent` struct is the main coordinator, responsible for:
+- Managing the search lifecycle
+- Fetching job listings from sources
+- Filtering candidates based on user profile
+- Optionally scoring and researching jobs
+- Persisting results to storage
+
+### Key Functions
+
+- `Start(trigger string, force bool)`: Initiates a search run with optional force refresh
+- `execute(ctx context.Context, run *model.Run, force bool)`: Main execution loop that coordinates all agent functions
+- `fetchAll(ctx context.Context, sources []model.Source, profile model.Profile, settings model.Settings, force bool, notes *[]string)`: Fetches jobs from all configured sources in parallel
+- `fetchOne(ctx context.Context, src model.Source, profile model.Profile, ttl time.Duration, force bool)`: Fetches jobs from a single source
+
+## Agent Lifecycle
+
+1. **Start**: Agent is initiated with trigger and force parameters
+2. **Fetch**: Job listings are fetched from all configured sources (with caching)
+3. **Filter**: Candidates are filtered against the user profile using the filter system
+4. **Score** (optional): If enabled, job postings are scored using LLM
+5. **Expand** (optional): If enabled and few jobs pass filtering, the agent may add new sources
+6. **Research** (optional): If enabled, additional research is performed on top candidates
+7. **Sync**: Context is synchronized with external systems
+
+## Components
 
 ### Research
-The research component fetches public job postings and generates detailed briefings using the LLM. It reads stored job postings, retrieves the full text from the source URL when available, and analyzes the content against the user's profile to produce a comprehensive briefing.
+Provides LLM-powered analysis of job listings, including:
+- Company information
+- Role requirements
+- Potential risks and considerations
+- Questions to ask when applying
 
-### Expand 
-The expand component dynamically adds new sources when the current sources don't return enough qualified listings. It intelligently extends the search by identifying additional sources that might provide relevant opportunities.
+### Expand
+Adds new sources to the search when the initial filtering produces a small set of results.
+This uses an LLM to suggest additional job sources that might yield better matches.
 
 ### Score
-The scoring component evaluates potential matches using machine learning capabilities. It processes job listings through a structured scoring system that considers:
-- Match quality with user's profile (keywords, skills, requirements)
-- Salary expectations and ranges  
-- Company location and remote work options
-- Job title and role descriptions
-- Technical stack and experience level
+Implements LLM-based scoring of job opportunities based on:
+- User profile match
+- Job requirements and responsibilities
+- Company characteristics
+- Compensation details
 
 ### Sync
-The sync component manages context files for different sources and keeps the local filesystem in sync with remote repositories.
+Handles synchronization of job data with external context systems (e.g., KiwiFS).
 
-## Job Processing Lifecycle
+## Configuration
 
-1. **Fetch**: Agents collect job listings from configured sources using concurrent fetching to improve performance
-2. **Filter**: Initial filtering occurs based on user's profile settings (keywords, must-haves, exclusions, locations)
-3. **Score** (Optional): For listings that pass the initial filter, agents apply LLM-based scoring using structured prompts and evaluation criteria
-4. **Store**: Processed job listings are saved to the local database with status tracking
+The agent respects settings defined in the configuration including:
+- Cache duration for sources
+- Whether to use LLM scoring
+- Whether to perform automatic research
+- Whether to automatically expand sources
+- Maximum number of jobs to process with LLM
 
-## Decision Making Based on Filters and Scoring
+## Usage Patterns
 
-The agent applies a two-tiered decision process:
+### Manual Search
+```go
+agent := agent.New(store, dataDir)
+run, err := agent.Start("manual", false)
+```
 
-### Initial Filtering
-Jobs first go through a rule-based filtering system that evaluates each listing against the user's profile:
-- Keywords match (positive or negative)
-- Required skills/qualifications  
-- Excluded terms or requirements
-- Location preferences (include or exclude)
-- Remote work preferences
-- Salary minimum expectations
+### Auto Search (with force refresh)
+```go
+agent := agent.New(store, dataDir)
+run, err := agent.Start("auto", true)
+```
 
-The filter uses configurable settings to determine what constitutes a "pass" vs. "reject" for each job listing.
+## Job Processing
 
-### LLM-Based Scoring  
-For jobs that pass the initial filters, agents apply an optional LLM scoring system:
-- Uses structured prompts to evaluate role fit quality 
-- Scores on a 0-100 scale with detailed pros and cons
-- Considers seniority level (engineer, architect, etc.) 
-- Evaluates salary expectations relative to market rates
-- Takes into account company location and remote work options
-- Prioritizes jobs based on technical stack overlap
+1. **Fetch**: All sources are queried in parallel and jobs are cached
+2. **Filter**: Each job is evaluated against the user's profile
+3. **Score**: If configured, jobs are scored using an LLM
+4. **Research**: When configured, additional information is fetched and analyzed for top candidates
+5. **Store**: Final results are saved to persistent storage
 
-The scoring system is designed to focus processing resources on the highest-quality matches. Jobs are ranked by:
-1. Technical title keywords (infrastructure, platform, SRE, DevOps)
-2. Salary levels (with higher paying positions ranked higher) 
-3. Remote work capability
-4. Location preferences
-
-### Final Decision
-A job listing is considered a match if:
-- It passes the initial filtering criteria  
-- OR it meets or exceeds the configured minimum score threshold (if scoring is enabled)
-
-The agent system balances thoroughness with efficiency by:
-- Applying filters first to reduce the list size
-- Scoring only the most promising candidates based on pre-defined ranking criteria
-- Allowing users to configure their preference for either extensive filtering or LLM-based scoring
-
-## Configuration Settings
-
-Agents are controlled through user-defined settings including:
-- `ScoreWithLLM` - Enable/disable LLM scoring of jobs
-- `AutoResearch` - Automatically research job details
-- `MaxLLMJobs` - Maximum number of jobs to score with LLM per run
-- `ExpandSources` - Enable dynamic source expansion based on search results
-- `CacheHours` - How long to cache sources before re-fetching
+The agent maintains a detailed trail of all operations in the `model.Run` structure for tracking search progress and outcomes.
