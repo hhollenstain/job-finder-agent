@@ -105,29 +105,47 @@ Required configuration key: `api_key` (the API key from RapidAPI). |
 
 The agent exposes a RESTful API at `/api/*`:
 
-**Core Functions**
-- `GET /api/health` - Check if the service is running
-- `GET /api/overview` - Get current system status overview
-- `GET /api/profile` - Get or update user profile settings
-- `GET /api/settings` - Get or update global settings  
-- `GET /api/schedule` - Get or update scheduled runs
-- `GET /api/sources` - List all job sources
-- `POST /api/sources` - Create a new job source
-- `PUT /api/sources/{id}` - Update an existing job source  
-- `DELETE /api/sources/{id}` - Delete a job source
-- `GET /api/source-kinds` - Get available source kinds
-- `GET /api/jobs` - List or get job details
-- `GET /api/jobs/{id}` - Get specific job details
-- `GET /api/runs` - List, start, or get run details
-- `GET /api/context` - Get context file content for KiwiFS sync
+### Profile Management
+- `GET /api/profile` - Retrieves the current job search profile
+- `PUT /api/profile` - Updates the job search profile
 
-**Additional Endpoints**
-- `POST /api/jobs/purge` - Remove old jobs from database
-- `POST /api/jobs/{id}/research` - Perform additional research on a specific job
-- `POST /api/models` - List available LLM models for a given provider
-- `PATCH /api/jobs/{id}` - Update job status or favorite flag
-- `POST /api/context/sync` - Sync context to KiwiFS
-- `POST /api/runs` - Start a new search run
+### Settings Management  
+- `GET /api/settings` - Retrieves current application settings
+- `PUT /api/settings` - Updates application settings
+
+### Schedule Management
+- `GET /api/schedule` - Retrieves the current scheduling configuration
+- `PUT /api/schedule` - Updates the scheduling configuration
+
+### Source Management
+- `GET /api/sources` - Lists all configured job sources
+- `POST /api/sources` - Creates a new job source
+- `PUT /api/sources/{id}` - Updates an existing job source
+- `DELETE /api/sources/{id}` - Deletes a job source
+- `GET /api/source-kinds` - Retrieves available source types
+
+### Job Management
+- `GET /api/jobs` - Lists jobs with optional filtering parameters
+- `GET /api/jobs/{id}` - Retrieves a specific job by ID
+- `PATCH /api/jobs/{id}` - Updates job properties (status or favorite)
+- `POST /api/jobs/purge` - Removes old jobs that haven't been kept
+- `POST /api/jobs/{id}/research` - Performs additional research on a specific job
+
+### Run Management
+- `POST /api/runs` - Starts a new job search run (returns immediately)
+- `GET /api/runs` - Lists recent job search runs
+- `GET /api/runs/{id}` - Retrieves details of a specific run
+
+### Context Management
+- `GET /api/context` - Retrieves context page preview from KiwiFS or local files
+- `POST /api/context/sync` - Forces synchronization of context files to KiwiFS
+
+### Model Management
+- `POST /api/models` - Lists available models for the configured LLM provider
+
+### System Information
+- `GET /api/health` - Returns system health status
+- `GET /api/overview` - Provides an overview of system state including counts, schedule, and LLM status
 
 `POST /api/runs` starts a search and returns immediately. Poll `GET /api/runs/{id}` until `status` is no longer `running`.
 
@@ -228,3 +246,7 @@ The application logs information to stdout. Check for any error messages that mi
 ## Conclusion
 
 The Job Finder agent provides a comprehensive solution for automated job searching by aggregating listings from multiple sources, applying intelligent filtering based on user profiles, and offering advanced features like LLM-powered scoring and research capabilities. With support for both public and API-based job boards, including specialized sources like LinkedIn guest search, Indeed, Dice, and USAJOBS, users can customize their job search experience to match their specific requirements. The integration with KiwiFS enables persistent storage and long-term analysis of job search data, making the agent not just a tool for finding jobs but also for building a knowledge base around career development opportunities.
+
+The agent's flexibility is demonstrated through its wide range of supported job sources, from general public boards like Remotive, Remote OK, and Arbeitnow to company-specific boards through Greenhouse, Lever, and Ashby, as well as specialized APIs such as Adzuna's international job aggregator and USAJOBS' federal job listings. For platforms that do not offer public search APIs, the agent seamlessly integrates with RapidAPI's JSearch service that accesses Indeed and Dice job listings.
+
+With comprehensive API documentation and clear configuration requirements for each source type, users can easily set up their job search to include any combination of these sources according to their career needs and preferences. The inclusion of features like automated scheduling, AI-powered scoring and research, and flexible filtering based on profile criteria makes this a robust tool for modern job seekers who want both broad market coverage and personalized matching.
