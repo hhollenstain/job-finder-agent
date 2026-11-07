@@ -79,10 +79,11 @@ The Job Finder agent operates through a carefully orchestrated 8-step execution 
 | Remotive, Remote OK, Arbeitnow | No | Public feeds. Listings link back to the source. |
 | Greenhouse, Lever, Ashby | No | One company board. Use the public slug, such as `stripe`. |
 | RSS / Atom, JSON | No | Any feed you are allowed to read. JSON uses dot paths (`jobs`, `title`, `url`). |
-| Adzuna, USAJOBS | Yes | Official APIs. |
+| Adzuna | Yes | Official API: [https://developer.adzuna.com/](https://developer.adzuna.com/) |
+| USAJOBS | Yes | Official API: [https://developer.usajobs.gov/](https://developer.usajobs.gov/) |
 | Slack | Bot token | Channel IDs. The bot must already be in the channel (`channels:history`, and `groups:history` for private channels). |
 | LinkedIn | No | Public guest job search. No account. Listings link back to the LinkedIn posting. |
-| Indeed, Dice | RapidAPI JSearch key | JSearch returns postings it already aggregates. Filter with publishers `Indeed` or `Dice`. |
+| Indeed, Dice | RapidAPI JSearch key | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) |
 
 > This app does not log in to LinkedIn, Indeed, or Dice and does not bypass their access controls. LinkedIn search uses the public guest listings. Indeed and Dice stay behind an optional JSearch key.
 
