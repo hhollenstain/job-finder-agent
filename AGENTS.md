@@ -78,9 +78,9 @@ The Job Finder agent supports many job sources. Each source type has different r
 
 | Kind | Needs a key | Notes |
 | --- | --- | --- |
-| Remotive | No | Public feed. Listings link back to the source. |
-| Remote OK | No | Public feed. Listings link back to the source. |
-| Arbeitnow | No | Public feed. Listings link back to the source. |
+| Remotive | No | Public feed. Listings link back to the source. [API Documentation](https://remotive.com/api) |
+| Remote OK | No | Public feed. Listings link back to the source. [API Documentation](https://remoteok.io/api) |
+| Arbeitnow | No | Public feed. Listings link back to the source. [API Documentation](https://www.arbeitnow.io/) |
 | Greenhouse | No | One company board. Use the public slug, such as `stripe`. |
 | Lever | No | One company board. Use the public site name, such as `netflix`. |
 | Ashby | No | One company board. Use the public board name, such as `notion`. |
@@ -242,6 +242,14 @@ The project follows a standard Go structure:
 ### Logs
 
 The application logs information to stdout. Check for any error messages that might indicate what's going wrong.
+
+## Conclusion
+
+The Job Finder agent provides a comprehensive solution for automated job searching by aggregating listings from multiple sources, applying intelligent filtering based on user profiles, and offering advanced features like LLM-powered scoring and research capabilities. With support for both public and API-based job boards, including specialized sources like LinkedIn guest search, Indeed, Dice, and USAJOBS, users can customize their job search experience to match their specific requirements. The integration with KiwiFS enables persistent storage and long-term analysis of job search data, making the agent not just a tool for finding jobs but also for building a knowledge base around career development opportunities.
+
+The agent's flexibility is demonstrated through its wide range of supported job sources, from general public boards like Remotive, Remote OK, and Arbeitnow to company-specific boards through Greenhouse, Lever, and Ashby, as well as specialized APIs such as Adzuna's international job aggregator and USAJOBS' federal job listings. For platforms that do not offer public search APIs, the agent seamlessly integrates with RapidAPI's JSearch service that accesses Indeed and Dice job listings.
+
+With comprehensive API documentation and clear configuration requirements for each source type, users can easily set up their job search to include any combination of these sources according to their career needs and preferences. The inclusion of features like automated scheduling, AI-powered scoring and research, and flexible filtering based on profile criteria makes this a robust tool for modern job seekers who want both broad market coverage and personalized matching.
 
 ## Conclusion
 
