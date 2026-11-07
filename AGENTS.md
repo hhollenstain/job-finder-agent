@@ -146,16 +146,26 @@ settings:
 ## API Endpoints
 
 The UI uses JSON under `/api`:
-- `profile`
-- `settings`
-- `schedule`
-- `sources`
-- `source-kinds`
-- `jobs`
-- `runs`
-- `context`
+- `profile` - Get or update user profile settings
+- `settings` - Get or update global settings
+- `schedule` - Get or update scheduled runs
+- `sources` - List, create, update, or delete job sources
+- `source-kinds` - Get available source kinds
+- `jobs` - List or get job details
+- `runs` - List, start, or get run details
+- `context` - Get context file content for KiwiFS sync
 
 `POST /api/runs` starts a search and returns immediately. Poll `GET /api/runs/{id}` until `status` is no longer `running`.
+
+Additional endpoints:
+- `POST /api/sources` - Create a new job source
+- `PUT /api/sources/{id}` - Update an existing job source
+- `DELETE /api/sources/{id}` - Delete a job source
+- `POST /api/jobs/purge` - Remove old jobs from database
+- `POST /api/jobs/{id}/research` - Perform additional research on a specific job
+- `POST /api/models` - List available LLM models for a given provider
+- `PATCH /api/jobs/{id}` - Update job status or favorite flag
+- `POST /api/context/sync` - Sync context to KiwiFS
 
 ## KiwiFS Integration
 
