@@ -86,7 +86,7 @@ Required configuration keys: `app_id` and `app_key` (both needed). |
 | USAJOBS | Yes | Official API: [https://developer.usajobs.gov/](https://developer.usajobs.gov/)  
 Required configuration keys: `api_key` (Authorization-Key header) and `email` (User-Agent header). |
 | Slack | Bot token | Channel IDs. The bot must already be in the channel (`channels:history`, and `groups:history` for private channels). |
-| LinkedIn | No | Public guest job search. No account. Listings link back to the LinkedIn posting. |
+| LinkedIn | No | Public guest job search. No account required. Uses LinkedIn's public guest search API endpoint at `/jobs-guest/jobs/api/seeMoreJobPostings/search`. Listings link back to the LinkedIn posting. Official API documentation: [LinkedIn Jobs Guest Search](https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search) |
 | Indeed, Dice (via JSearch) | RapidAPI JSearch key | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch)  
 Required configuration key: `api_key` (the API key from RapidAPI). |
 | jsearch | RapidAPI JSearch key | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch)  
