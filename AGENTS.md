@@ -99,6 +99,8 @@ Required configuration key: `api_key` (the API key from RapidAPI). |
 The agent exposes a RESTful API at `/api/*`:
 
 **Core Functions**
+- `GET /api/health` - Check if the service is running
+- `GET /api/overview` - Get current system status overview
 - `GET /api/profile` - Get or update user profile settings
 - `GET /api/settings` - Get or update global settings  
 - `GET /api/schedule` - Get or update scheduled runs
@@ -108,6 +110,7 @@ The agent exposes a RESTful API at `/api/*`:
 - `DELETE /api/sources/{id}` - Delete a job source
 - `GET /api/source-kinds` - Get available source kinds
 - `GET /api/jobs` - List or get job details
+- `GET /api/jobs/{id}` - Get specific job details
 - `GET /api/runs` - List, start, or get run details
 - `GET /api/context` - Get context file content for KiwiFS sync
 
@@ -117,6 +120,7 @@ The agent exposes a RESTful API at `/api/*`:
 - `POST /api/models` - List available LLM models for a given provider
 - `PATCH /api/jobs/{id}` - Update job status or favorite flag
 - `POST /api/context/sync` - Sync context to KiwiFS
+- `POST /api/runs` - Start a new search run
 
 `POST /api/runs` starts a search and returns immediately. Poll `GET /api/runs/{id}` until `status` is no longer `running`.
 
@@ -175,32 +179,6 @@ settings:
     space: ""
     path_prefix: job-search
 ```
-
-## API Endpoints
-
-The agent exposes a RESTful API at `/api/*`:
-
-**Core Functions**
-- `GET /api/profile` - Get or update user profile settings
-- `GET /api/settings` - Get or update global settings  
-- `GET /api/schedule` - Get or update scheduled runs
-- `GET /api/sources` - List all job sources
-- `POST /api/sources` - Create a new job source
-- `PUT /api/sources/{id}` - Update an existing job source  
-- `DELETE /api/sources/{id}` - Delete a job source
-- `GET /api/source-kinds` - Get available source kinds
-- `GET /api/jobs` - List or get job details
-- `GET /api/runs` - List, start, or get run details
-- `GET /api/context` - Get context file content for KiwiFS sync
-
-**Additional Endpoints**
-- `POST /api/jobs/purge` - Remove old jobs from database
-- `POST /api/jobs/{id}/research` - Perform additional research on a specific job
-- `POST /api/models` - List available LLM models for a given provider
-- `PATCH /api/jobs/{id}` - Update job status or favorite flag
-- `POST /api/context/sync` - Sync context to KiwiFS
-
-`POST /api/runs` starts a search and returns immediately. Poll `GET /api/runs/{id}` until `status` is no longer `running`.
 
 ## KiwiFS Integration
 
