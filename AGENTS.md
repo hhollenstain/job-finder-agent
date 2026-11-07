@@ -74,20 +74,49 @@ The Job Finder agent operates through a carefully orchestrated 8-step execution 
 
 ### Job Sources
 
+The Job Finder agent supports many job sources. Each source type has different requirements for configuration, including whether an API key is needed.
+
 | Kind | Needs a key | Notes |
 | --- | --- | --- |
 | Remotive, Remote OK, Arbeitnow | No | Public feeds. Listings link back to the source. |
 | Greenhouse, Lever, Ashby | No | One company board. Use the public slug, such as `stripe`. |
 | RSS / Atom, JSON | No | Any feed you are allowed to read. JSON uses dot paths (`jobs`, `title`, `url`). |
 | Adzuna | Yes | Official API: [https://developer.adzuna.com/](https://developer.adzuna.com/)  
-Required configuration keys: `app_id` and `app_key` |
+Required configuration keys: `app_id` and `app_key` (both needed) |
 | USAJOBS | Yes | Official API: [https://developer.usajobs.gov/](https://developer.usajobs.gov/)  
 Required configuration keys: `api_key` (Authorization-Key header) and `email` (User-Agent header) |
 | Slack | Bot token | Channel IDs. The bot must already be in the channel (`channels:history`, and `groups:history` for private channels). |
 | LinkedIn | No | Public guest job search. No account. Listings link back to the LinkedIn posting. |
-| Indeed, Dice | RapidAPI JSearch key | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) |
+| Indeed, Dice | RapidAPI JSearch key | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch)  
+Required configuration key: `jsearch_key` (the API key from RapidAPI) |
 
 > This app does not log in to LinkedIn, Indeed, or Dice and does not bypass their access controls. LinkedIn search uses the public guest listings. Indeed and Dice stay behind an optional JSearch key.
+
+## API Endpoints
+
+The agent exposes a RESTful API at `/api/*`:
+
+**Core Functions**
+- `GET /api/profile` - Get or update user profile settings
+- `GET /api/settings` - Get or update global settings  
+- `GET /api/schedule` - Get or update scheduled runs
+- `GET /api/sources` - List all job sources
+- `POST /api/sources` - Create a new job source
+- `PUT /api/sources/{id}` - Update an existing job source  
+- `DELETE /api/sources/{id}` - Delete a job source
+- `GET /api/source-kinds` - Get available source kinds
+- `GET /api/jobs` - List or get job details
+- `GET /api/runs` - List, start, or get run details
+- `GET /api/context` - Get context file content for KiwiFS sync
+
+**Additional Endpoints**
+- `POST /api/jobs/purge` - Remove old jobs from database
+- `POST /api/jobs/{id}/research` - Perform additional research on a specific job
+- `POST /api/models` - List available LLM models for a given provider
+- `PATCH /api/jobs/{id}` - Update job status or favorite flag
+- `POST /api/context/sync` - Sync context to KiwiFS
+
+`POST /api/runs` starts a search and returns immediately. Poll `GET /api/runs/{id}` until `status` is no longer `running`.
 
 ### Models
 
