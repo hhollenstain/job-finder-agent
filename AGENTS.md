@@ -82,13 +82,15 @@ The Job Finder agent supports many job sources. Each source type has different r
 | Greenhouse, Lever, Ashby | No | One company board. Use the public slug, such as `stripe`. |
 | RSS / Atom, JSON | No | Any feed you are allowed to read. JSON uses dot paths (`jobs`, `title`, `url`). |
 | Adzuna | Yes | Official API: [https://developer.adzuna.com/](https://developer.adzuna.com/)  
-Required configuration keys: `app_id` and `app_key` (both needed) |
+Required configuration keys: `app_id` and `app_key` (both needed). |
 | USAJOBS | Yes | Official API: [https://developer.usajobs.gov/](https://developer.usajobs.gov/)  
-Required configuration keys: `api_key` (Authorization-Key header) and `email` (User-Agent header) |
+Required configuration keys: `api_key` (Authorization-Key header) and `email` (User-Agent header). |
 | Slack | Bot token | Channel IDs. The bot must already be in the channel (`channels:history`, and `groups:history` for private channels). |
 | LinkedIn | No | Public guest job search. No account. Listings link back to the LinkedIn posting. |
-| Indeed, Dice | RapidAPI JSearch key | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch)  
-Required configuration key: `jsearch_key` (the API key from RapidAPI) |
+| Indeed, Dice (via JSearch) | RapidAPI JSearch key | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch)  
+Required configuration key: `api_key` (the API key from RapidAPI). |
+| jsearch | RapidAPI JSearch key | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch)  
+Required configuration key: `api_key` (the API key from RapidAPI). |
 
 > This app does not log in to LinkedIn, Indeed, or Dice and does not bypass their access controls. LinkedIn search uses the public guest listings. Indeed and Dice stay behind an optional JSearch key.
 
