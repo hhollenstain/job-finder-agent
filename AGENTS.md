@@ -81,9 +81,9 @@ The Job Finder agent supports many job sources. Each source type has different r
 | Remotive | No | Public feed. Listings link back to the source. [API Documentation](https://remotive.com/api) |
 | Remote OK | No | Public feed. Listings link back to the source. [API Documentation](https://remoteok.io/api) |
 | Arbeitnow | No | Public feed. Listings link back to the source. [API Documentation](https://www.arbeitnow.io/) |
-| Greenhouse | No | One company board. Use the public slug, such as `stripe`. |
-| Lever | No | One company board. Use the public site name, such as `netflix`. |
-| Ashby | No | One company board. Use the public board name, such as `notion`. |
+| Greenhouse | No | One company board. Use the public slug, such as `stripe`. [Greenhouse API Docs](https://developers.greenhouse.io/) |
+| Lever | No | One company board. Use the public site name, such as `netflix`. [Lever API Docs](https://jobs.lever.co/developers) |
+| Ashby | No | One company board. Use the public board name, such as `notion`. [Ashby API Docs](https://docs.ashbyhq.com/) |
 | RSS / Atom | No | Any feed you are allowed to read. |
 | JSON | No | Any JSON document you can describe with field paths. |
 | Adzuna | Yes | Official API: [https://developer.adzuna.com/](https://developer.adzuna.com/)  
