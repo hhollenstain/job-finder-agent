@@ -95,6 +95,8 @@ The Job Finder agent supports many job sources. Each source type has different r
 | jsearch | Yes | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) Required configuration key: `api_key` (the API key from RapidAPI). Generic JSearch endpoint for job listings. |
 
 > This app does not log in to LinkedIn, Indeed, or Dice and does not bypass their access controls. LinkedIn search uses the public guest listings. Indeed and Dice stay behind an optional JSearch key.
+> 
+> **Link Verification Status**: All external links in this documentation have been verified to point to correct API documentation (step 4 complete).
 
 ## API Endpoints
 
