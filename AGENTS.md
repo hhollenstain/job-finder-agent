@@ -78,11 +78,11 @@ The Job Finder agent supports many job sources. Each source type has different r
 
 | Kind | Needs a key | Notes |
 | --- | --- | --- |
-| Remotive | No | Public feed. Listings link back to the source. [API Documentation](https://remotive.com/api) |
-| Remote OK | No | Public feed. Listings link back to the source. [API Documentation](https://remoteok.io/api) |
-| Arbeitnow | No | Public feed. Listings link back to the source. [API Documentation](https://www.arbeitnow.io/) |
+| Remotive | No | Public feed. Listings link back to the source. [API Documentation](https://remotive.com/remote-jobs/api) |
+| Remote OK | No | Public feed. Listings link back to the source. [API Documentation](https://remoteok.com/api) |
+| Arbeitnow | No | Public feed. Listings link back to the source. [API Documentation](https://www.arbeitnow.com/) |
 | Greenhouse | No | One company board. Use the public slug, such as `stripe`. [Greenhouse API Docs](https://developers.greenhouse.io/) |
-| Lever | No | One company board. Use the public site name, such as `netflix`. [Lever API Docs](https://jobs.lever.co/developers) |
+| Lever | No | One company board. Use the public site name, such as `netflix`. [Lever API Docs](https://hire.lever.co/developer/documentation) |
 | Ashby | No | One company board. Use the public board name, such as `notion`. [Ashby API Docs](https://docs.ashbyhq.com/) |
 | RSS / Atom | No | Any feed you are allowed to read. |
 | JSON | No | Any JSON document you can describe with field paths. |
