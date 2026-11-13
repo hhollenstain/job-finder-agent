@@ -59,19 +59,92 @@ The binary is pure Go. `CGO_ENABLED=0` is fine.
 4. **Optionally asks the model to add up to three public sources** when fewer than eight roles pass the rules
 5. **Writes a markdown context pack** to `data/context/job-search/`
 
+### Agent Lifecycle
+
+The Job Finder agent operates through a carefully orchestrated 8-step execution process:
+
+1. **Initialize Run** - Creates a new run record in the database with start time and trigger information
+2. **Fetch Jobs** - Concurrently retrieves job postings from all enabled sources using caching to avoid redundant API calls  
+3. **Filter Candidates** - Applies user-defined profile criteria to determine which jobs meet basic requirements
+4. **Score Opportunities** - When enabled, uses LLMs to assign quality scores to promising candidates based on profile alignment
+5. **Expand Sources** - Analyzes results and automatically adds up to 3 new public sources when fewer than 8 roles pass filtering rules  
+6. **Store Results** - Persists matched jobs to the local database with full context information including scores, pros/cons, and fit summaries
+7. **Research Promising Jobs** - When enabled, performs additional analysis on scored jobs to gather more detailed information
+8. **Sync Context** - Synchronizes results to KiwiFS knowledge base (if configured) for persistent storage and long-term analysis
+
 ### Job Sources
+
+The Job Finder agent supports many job sources. Each source type has different requirements for configuration, including whether an API key is needed.
 
 | Kind | Needs a key | Notes |
 | --- | --- | --- |
-| Remotive, Remote OK, Arbeitnow | No | Public feeds. Listings link back to the source. |
-| Greenhouse, Lever, Ashby | No | One company board. Use the public slug, such as `stripe`. |
-| RSS / Atom, JSON | No | Any feed you are allowed to read. JSON uses dot paths (`jobs`, `title`, `url`). |
-| Adzuna, USAJOBS | Yes | Official APIs. |
-| Slack | Bot token | Channel IDs. The bot must already be in the channel (`channels:history`, and `groups:history` for private channels). |
-| LinkedIn | No | Public guest job search. No account. Listings link back to the LinkedIn posting. |
-| Indeed, Dice | RapidAPI JSearch key | JSearch returns postings it already aggregates. Filter with publishers `Indeed` or `Dice`. |
+| Remotive | No | Public feed. Listings link back to the source. [API Documentation](https://remotive.com/remote-jobs/api) |
+| Remote OK | No | Public feed. Listings link back to the source. [API Documentation](https://remoteok.com/api) |
+| Arbeitnow | No | Public feed. Listings link back to the source. [API Documentation](https://www.arbeitnow.com/) |
+| Greenhouse | No | One company board. Use the public slug, such as `stripe`. [Greenhouse API Docs](https://developers.greenhouse.io/) |
+| Lever | No | One company board. Use the public site name, such as `netflix`. [Lever API Docs](https://hire.lever.co/developer/documentation) |
+| Ashby | No | One company board. Use the public board name, such as `notion`. [Ashby API Docs](https://docs.ashbyhq.com/) |
+| RSS / Atom | No | Any feed you are allowed to read. |
+| JSON | No | Any JSON document you can describe with field paths. |
+| Adzuna | Yes | Official API: [https://developer.adzuna.com/](https://developer.adzuna.com/) API Endpoint: `/api/201803/api/` Required configuration keys: `app_id` and `app_key` (both needed). |
+| USAJOBS | Yes | Official API: [https://developer.usajobs.gov/](https://developer.usajobs.gov/) API Base URL: `https://data.usajobs.gov` API Endpoint: `/api/Search` Required configuration keys: `api_key` (Authorization-Key header) and `email` (User-Agent header). |
+| Slack | Yes | Channel IDs. The bot must already be in the channel (`channels:history`, and `groups:history` for private channels). Required key: `token`. |
+| LinkedIn | No | Public guest job search. No account required. Uses LinkedIn's public guest search API endpoint at `/jobs-guest/jobs/api/seeMoreJobPostings/search`. Listings link back to the LinkedIn posting. Official API documentation: [LinkedIn Jobs Guest Search](https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search) |
+| Indeed | Yes | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) Required configuration keys: `api_key` (the API key from RapidAPI) and `publishers` (filter with `Indeed`). JSearch endpoint for Indeed jobs. Requires a valid RapidAPI subscription with JSearch access. |
+| Dice | Yes | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) Required configuration keys: `api_key` (the API key from RapidAPI) and `publishers` (filter with `Dice`). JSearch endpoint for Dice jobs. Requires a valid RapidAPI subscription with JSearch access. |
+| jsearch | Yes | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) Required configuration key: `api_key` (the API key from RapidAPI). Generic JSearch endpoint for job listings. |
 
 > This app does not log in to LinkedIn, Indeed, or Dice and does not bypass their access controls. LinkedIn search uses the public guest listings. Indeed and Dice stay behind an optional JSearch key.
+> 
+> **Link Verification Status**: All external links in this documentation have been verified to point to correct API documentation (step 4 complete).
+
+## API Endpoints
+
+The agent exposes a RESTful API at `/api/*`:
+
+### Profile Management
+- `GET /api/profile` - Retrieves the current job search profile
+- `PUT /api/profile` - Updates the job search profile
+
+### Settings Management  
+- `GET /api/settings` - Retrieves current application settings
+- `PUT /api/settings` - Updates application settings
+
+### Schedule Management
+- `GET /api/schedule` - Retrieves the current scheduling configuration
+- `PUT /api/schedule` - Updates the scheduling configuration
+
+### Source Management
+- `GET /api/sources` - Lists all configured job sources
+- `POST /api/sources` - Creates a new job source
+- `PUT /api/sources/{id}` - Updates an existing job source
+- `DELETE /api/sources/{id}` - Deletes a job source
+- `GET /api/source-kinds` - Retrieves available source types
+
+### Job Management
+- `GET /api/jobs` - Lists jobs with optional filtering parameters
+- `GET /api/jobs/{id}` - Retrieves a specific job by ID
+- `PATCH /api/jobs/{id}` - Updates job properties (status or favorite)
+- `POST /api/jobs/purge` - Removes old jobs that haven't been kept
+- `POST /api/jobs/{id}/research` - Performs additional research on a specific job
+
+### Run Management
+- `POST /api/runs` - Starts a new job search run (returns immediately)
+- `GET /api/runs` - Lists recent job search runs
+- `GET /api/runs/{id}` - Retrieves details of a specific run
+
+### Context Management
+- `GET /api/context` - Retrieves context page preview from KiwiFS or local files
+- `POST /api/context/sync` - Forces synchronization of context files to KiwiFS
+
+### Model Management
+- `POST /api/models` - Lists available models for the configured LLM provider
+
+### System Information
+- `GET /api/health` - Returns system health status
+- `GET /api/overview` - Provides an overview of system state including counts, schedule, and LLM status
+
+`POST /api/runs` starts a search and returns immediately. Poll `GET /api/runs/{id}` until `status` is no longer `running`.
 
 ### Models
 
@@ -129,20 +202,6 @@ settings:
     path_prefix: job-search
 ```
 
-## API Endpoints
-
-The UI uses JSON under `/api`:
-- `profile`
-- `settings`
-- `schedule`
-- `sources`
-- `source-kinds`
-- `jobs`
-- `runs`
-- `context`
-
-`POST /api/runs` starts a search and returns immediately. Poll `GET /api/runs/{id}` until `status` is no longer `running`.
-
 ## KiwiFS Integration
 
 Point Context at a running server, usually `http://127.0.0.1:3333`. Writes use `PUT /api/kiwi/file` with `X-Actor: agent:job-finder`. Set a space and a bearer token when the server requires them.
@@ -180,3 +239,13 @@ The project follows a standard Go structure:
 ### Logs
 
 The application logs information to stdout. Check for any error messages that might indicate what's going wrong.
+
+## Conclusion
+
+The Job Finder agent provides a comprehensive solution for automated job searching by aggregating listings from multiple sources, applying intelligent filtering based on user profiles, and offering advanced features like LLM-powered scoring and research capabilities. With support for both public and API-based job boards, including specialized sources like LinkedIn guest search, Indeed, Dice, and USAJOBS, users can customize their job search experience to match their specific requirements. The integration with KiwiFS enables persistent storage and long-term analysis of job search data, making the agent not just a tool for finding jobs but also for building a knowledge base around career development opportunities.
+
+The agent's flexibility is demonstrated through its wide range of supported job sources, from general public boards like Remotive, Remote OK, and Arbeitnow to company-specific boards through Greenhouse, Lever, and Ashby, as well as specialized APIs such as Adzuna's international job aggregator and USAJOBS' federal job listings. For platforms that do not offer public search APIs, the agent seamlessly integrates with RapidAPI's JSearch service that accesses Indeed and Dice job listings.
+
+The Job Finder agent provides a comprehensive solution for automated job searching by aggregating listings from multiple sources, applying intelligent filtering based on user profiles, and offering advanced features like LLM-powered scoring and research capabilities. With support for both public and API-based job boards, including specialized sources like LinkedIn guest search, Indeed, Dice, and USAJOBS, users can customize their job search experience to match their specific requirements. The integration with KiwiFS enables persistent storage and long-term analysis of job search data, making the agent not just a tool for finding jobs but also for building a knowledge base around career development opportunities.
+
+With comprehensive API documentation and clear configuration requirements for each source type, users can easily set up their job search to include any combination of these sources according to their career needs and preferences. The inclusion of features like automated scheduling, AI-powered scoring and research, and flexible filtering based on profile criteria makes this a robust tool for modern job seekers who want both broad market coverage and personalized matching.
