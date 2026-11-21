@@ -70,7 +70,7 @@ The Job Finder agent operates through a carefully orchestrated 8-step execution 
 5. **Expand Sources** - Analyzes results and automatically adds up to 3 new public sources when fewer than 8 roles pass filtering rules  
 6. **Store Results** - Persists matched jobs to the local database with full context information including scores, pros/cons, and fit summaries
 7. **Research Promising Jobs** - When enabled, performs additional analysis on scored jobs to gather more detailed information
-8. **Sync Context** - Synchronizes results to KiwiFS knowledge base (if configured) for persistent storage and long-term analysis
+8. **Sync Context** - Synchronizes results to KiwiFS knowledge base (if configured) for persistent storage and long-term analysis. When enabled, this step writes job pages including profile, runs, jobs, and companies to both a local folder and a KiwiFS workspace under the configured path prefix. If KiwiFS is unreachable, the local folder is still written and the sync status indicates why the mirror failed. When KiwiFS is properly configured, the agent integrates with the knowledge base for persistent storage and long-term career analysis.
 
 ### Job Sources
 
@@ -84,15 +84,13 @@ The Job Finder agent supports many job sources. Each source type has different r
 | Greenhouse | No | One company board. Use the public slug, such as `stripe`. [Greenhouse API Docs](https://developers.greenhouse.io/) |
 | Lever | No | One company board. Use the public site name, such as `netflix`. [Lever API Docs](https://hire.lever.co/developer/documentation) |
 | Ashby | No | One company board. Use the public board name, such as `notion`. [Ashby API Docs](https://docs.ashbyhq.com/) |
-| RSS / Atom | No | Any feed you are allowed to read. |
-| JSON | No | Any JSON document you can describe with field paths. |
+| RSS / Atom | No | Any feed you are allowed to read. Configure with a URL to an RSS or Atom feed. Both formats are supported. |
+| JSON | No | Any JSON document you can describe with field paths. Configure with a URL to a JSON feed and specify field paths to extract job data. Field paths use dot notation (e.g., `data.jobs[0].title`) to navigate nested JSON structures. |
 | Adzuna | Yes | Official API: [https://developer.adzuna.com/](https://developer.adzuna.com/) API Endpoint: `/api/201803/api/` Required configuration keys: `app_id` and `app_key` (both needed). |
 | USAJOBS | Yes | Official API: [https://developer.usajobs.gov/](https://developer.usajobs.gov/) API Base URL: `https://data.usajobs.gov` API Endpoint: `/api/Search` Required configuration keys: `api_key` (Authorization-Key header) and `email` (User-Agent header). |
 | Slack | Yes | Channel IDs. The bot must already be in the channel (`channels:history`, and `groups:history` for private channels). Required key: `token`. |
-| LinkedIn | No | Public guest job search. No account required. Uses LinkedIn's public guest search API endpoint at `/jobs-guest/jobs/api/seeMoreJobPostings/search`. Listings link back to the LinkedIn posting. Official API documentation: [LinkedIn Jobs Guest Search](https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search) |
-| Indeed | Yes | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) Required configuration keys: `api_key` (the API key from RapidAPI) and `publishers` (filter with `Indeed`). JSearch endpoint for Indeed jobs. Requires a valid RapidAPI subscription with JSearch access. |
-| Dice | Yes | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) Required configuration keys: `api_key` (the API key from RapidAPI) and `publishers` (filter with `Dice`). JSearch endpoint for Dice jobs. Requires a valid RapidAPI subscription with JSearch access. |
-| jsearch | Yes | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) Required configuration key: `api_key` (the API key from RapidAPI). Generic JSearch endpoint for job listings. |
+| LinkedIn | No | Public guest job search. No account or token required. Uses LinkedIn's public guest search API endpoint at `/jobs-guest/jobs/api/seeMoreJobPostings/search`. Listings link back to the LinkedIn posting. This source requires no authentication but only shows public job listings available through LinkedIn's guest search API. [LinkedIn Jobs Guest Search API Documentation](https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search) |
+| JSearch | Yes | Official API: [https://rapidapi.com/rapiddweller/api/jsearch](https://rapidapi.com/rapiddweller/api/jsearch) Required configuration key: `api_key` (the API key from RapidAPI). Generic JSearch endpoint for job listings. Supports Indeed, Dice, and other job platforms when used with appropriate publisher filters. |
 
 > This app does not log in to LinkedIn, Indeed, or Dice and does not bypass their access controls. LinkedIn search uses the public guest listings. Indeed and Dice stay behind an optional JSearch key.
 > 
