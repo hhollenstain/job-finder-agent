@@ -67,6 +67,10 @@ Point Context at a running server, usually `http://127.0.0.1:3333`. Writes use `
 
 If KiwiFS is unreachable, the local folder is still written and the sync status says why the mirror failed.
 
+## UI style
+
+The UI is built from design tokens and shared component classes in `web/styles.css`. See [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md) for the rules, and open `/styleguide.html` in the running app to see every component.
+
 ## API
 
 The UI uses JSON under `/api`: `profile`, `settings`, `schedule`, `sources`, `source-kinds`, `jobs`, `runs`, and `context`. `POST /api/runs` starts a search and returns immediately. Poll `GET /api/runs/{id}` until `status` is no longer `running`.

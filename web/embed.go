@@ -5,5 +5,5 @@ import "embed"
 
 // Files is the static UI served at /.
 //
-//go:embed index.html styles.css app.js
+//go:embed index.html styles.css app.js styleguide.html
 var Files embed.FS
