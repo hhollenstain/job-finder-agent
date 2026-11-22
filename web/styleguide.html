@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Finder · Style guide</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Page-only helpers for laying out the samples. Not part of the UI. */
+    .sg-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: var(--space-3); }
+    .sg-swatch { display: grid; gap: var(--space-1); font-size: var(--text-xs); }
+    .sg-chip { height: 3rem; border-radius: var(--radius-md); border: 1px solid var(--line); }
+    .sg-scale { display: grid; gap: var(--space-2); }
+    .sg-scale > div { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: var(--space-3); align-items: baseline; }
+    .sg-space { display: flex; align-items: end; gap: var(--space-3); flex-wrap: wrap; }
+    .sg-space div { background: var(--accent-soft); border: 1px solid var(--accent-border); }
+    .sg-radii { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+    .sg-radii div { width: 5rem; height: 3rem; background: var(--surface-muted); border: 1px solid var(--line-strong); display: grid; place-items: center; font-size: var(--text-xs); }
+    .sg-panel { position: relative; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">JF</span>
+      <strong>Job Finder · Style guide</strong>
+    </div>
+    <div class="top-actions"><a class="ghost" href="/">Back to app</a></div>
+  </header>
+  <main>
+    <div class="page">
+      <h1>Style guide</h1>
+      <p class="muted">Every sample on this page is drawn with the app's own <code class="mono">styles.css</code>. If a sample here looks wrong, the app looks wrong too. Rules and rationale live in <code class="mono">docs/STYLE_GUIDE.md</code>.</p>
+
+      <section class="card">
+        <h2>Color</h2>
+        <p class="help">Use tokens, never raw hex. Accent means brand, success, or "on". Warn is pay and mid scores. Danger is destructive or rejected.</p>
+        <div class="sg-swatches">
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--bg)"></div><span class="mono">--bg</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--surface)"></div><span class="mono">--surface</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--surface-sunken)"></div><span class="mono">--surface-sunken</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--surface-muted)"></div><span class="mono">--surface-muted</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--ink)"></div><span class="mono">--ink</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--muted)"></div><span class="mono">--muted</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--faint)"></div><span class="mono">--faint</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--line-strong)"></div><span class="mono">--line-strong</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--accent)"></div><span class="mono">--accent</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--accent-soft)"></div><span class="mono">--accent-soft</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--warn)"></div><span class="mono">--warn</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--warn-soft)"></div><span class="mono">--warn-soft</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--danger)"></div><span class="mono">--danger</span></div>
+          <div class="sg-swatch"><div class="sg-chip" style="background: var(--danger-soft)"></div><span class="mono">--danger-soft</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Type</h2>
+        <div class="sg-scale">
+          <div><span class="mono muted">--text-2xl</span><h1>Page title</h1></div>
+          <div><span class="mono muted">--text-xl</span><h2>Card or panel title</h2></div>
+          <div><span class="mono muted">--text-lg</span><h3>Section heading</h3></div>
+          <div><span class="mono muted">--text-md</span><p>Body copy and job titles.</p></div>
+          <div><span class="mono muted">--text-sm</span><p class="help">Controls, labels, help, meta, tables.</p></div>
+          <div><span class="mono muted">--text-xs</span><span class="eyebrow">Eyebrow label</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Space and shape</h2>
+        <p class="help">Spacing steps: <span class="mono">--space-1</span> to <span class="mono">--space-6</span>.</p>
+        <div class="sg-space">
+          <div style="width: var(--space-1); height: var(--space-1)"></div>
+          <div style="width: var(--space-2); height: var(--space-2)"></div>
+          <div style="width: var(--space-3); height: var(--space-3)"></div>
+          <div style="width: var(--space-4); height: var(--space-4)"></div>
+          <div style="width: var(--space-5); height: var(--space-5)"></div>
+          <div style="width: var(--space-6); height: var(--space-6)"></div>
+        </div>
+        <p class="help">Radii: small marks, controls, surfaces, chips and badges.</p>
+        <div class="sg-radii">
+          <div style="border-radius: var(--radius-sm)">sm</div>
+          <div style="border-radius: var(--radius-md)">md</div>
+          <div style="border-radius: var(--radius-lg)">lg</div>
+          <div style="border-radius: var(--radius-pill)">pill</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Buttons</h2>
+        <p class="help">All buttons share one height and radius. One primary action per form or panel.</p>
+        <div class="row">
+          <button class="primary" type="button">Save profile</button>
+          <button class="ghost" type="button">Load models</button>
+          <a class="ghost" href="#buttons">Open posting</a>
+          <button class="danger" type="button">Remove</button>
+          <button class="primary" type="button" disabled>Searching…</button>
+          <button class="linkish" type="button">Index</button>
+          <button class="gear" type="button" aria-label="Settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
+          </button>
+          <button class="star on" type="button" aria-label="Favorite">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.4l2.3 4.9 5.4.7-4 3.7 1 5.3L12 15.6 7.3 18l1-5.3-4-3.7 5.4-.7z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <nav class="tabs" aria-label="Sample tabs" style="width: max-content">
+          <button type="button" class="active">Jobs</button>
+          <button type="button">Sources</button>
+          <button type="button">Profile</button>
+        </nav>
+      </section>
+
+      <section class="card">
+        <h2>Chips and badges</h2>
+        <p class="help">Chips filter and are clickable. Badges only label.</p>
+        <div class="stats">
+          <button type="button" class="stat on" aria-pressed="true"><strong>42</strong>Open</button>
+          <button type="button" class="stat" aria-pressed="false"><strong>7</strong>Saved</button>
+          <button type="button" class="source-chip on" aria-pressed="true"><span class="source-logo-wrap"><span class="logo-fallback">R</span></span>Remotive</button>
+          <button type="button" class="source-chip" aria-pressed="false"><span class="source-logo-wrap"><span class="logo-fallback">L</span></span>LinkedIn</button>
+        </div>
+        <div class="row">
+          <span class="pill">new</span>
+          <span class="pill matched">matched</span>
+          <span class="pill saved">saved</span>
+          <span class="pill rejected">rejected</span>
+          <span class="pill dismissed">dismissed</span>
+          <div class="score high">86</div>
+          <div class="score">64</div>
+          <div class="score low">31</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Forms</h2>
+        <form class="stack" onsubmit="return false">
+          <div class="grid-2">
+            <label class="field"><span>Keywords, any of these</span><input type="text" value="go, golang, backend"></label>
+            <label class="field"><span>Minimum pay</span><input type="number" value="150000"></label>
+            <label class="field"><span>Provider</span><select><option>Ollama (local)</option></select></label>
+            <label class="field"><span>API key</span><input type="password" placeholder="Saved"><span class="help">Help text sits under the input.</span></label>
+          </div>
+          <label class="field"><span>What you want</span><textarea>Backend engineer.</textarea></label>
+          <label class="switch-field"><input class="switch-input" type="checkbox" checked><span class="switch-ui" aria-hidden="true"></span>Remote only</label>
+          <label class="switch-field"><input class="switch-input" type="checkbox"><span class="switch-ui" aria-hidden="true"></span>Score matches with the model</label>
+          <p class="help">Form settings use the switch. The compact <span class="mono">.check</span> checkbox is for the header toolbar only:</p>
+          <label class="check"><input type="checkbox"> Skip cache</label>
+          <div class="row"><button class="primary" type="submit">Save</button><button class="ghost" type="button">Cancel</button></div>
+        </form>
+      </section>
+
+      <section class="stack">
+        <h2>Job row and detail</h2>
+        <div class="job selected">
+          <button class="job-open" type="button">
+            <div class="score high">82</div>
+            <div class="job-main">
+              <h3>Senior Backend Engineer</h3>
+              <div class="meta">Acme · Remote <span class="pill matched">matched</span></div>
+              <ul class="fit fit-preview">
+                <li class="fit-pros"><span class="sign">+</span>Go services, owns the billing API</li>
+                <li class="fit-cons"><span class="sign">−</span>On-call every third week</li>
+                <li class="fit-more">2 more points</li>
+              </ul>
+            </div>
+            <div class="pay-side">
+              <div class="source-mark"><span class="source-logo-wrap"><span class="logo-fallback">R</span></span><span class="source-name">Remotive</span></div>
+              <strong>$160,000–$190,000</strong>
+            </div>
+          </button>
+        </div>
+        <aside class="panel sg-panel">
+          <section class="pay-standout">
+            <div class="source-mark"><span class="source-logo-wrap"><span class="logo-fallback">R</span></span><span class="source-name">Remotive</span></div>
+            <span class="label">Compensation</span>
+            <strong>$160,000–$190,000</strong>
+          </section>
+          <div class="detail-sticky">
+            <h2>Senior Backend Engineer</h2>
+            <p class="muted">Acme · Remote</p>
+            <div class="row">
+              <span class="pill matched">matched</span>
+              <a class="ghost" href="#detail">Open posting</a>
+              <button class="primary" type="button">Save</button>
+              <button class="ghost" type="button">Dismiss</button>
+            </div>
+          </div>
+          <h3>Posting</h3>
+          <div class="pre">We are hiring a backend engineer to own the billing API.</div>
+        </aside>
+      </section>
+
+      <section class="card">
+        <h2>Table</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>When</th><th>Trigger</th><th>Status</th><th>Counts</th></tr></thead>
+            <tbody>
+              <tr><td>11/20/2026, 8:00 AM</td><td>schedule</td><td>finished</td><td>120 fetched · 9 matched · 14 new</td></tr>
+              <tr><td>11/19/2026, 8:00 AM</td><td>manual</td><td>finished</td><td>98 fetched · 6 matched · 3 new</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

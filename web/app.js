@@ -563,7 +563,7 @@ async function loadDetail(id) {
   try {
     job = await api("/api/jobs/" + encodeURIComponent(id));
   } catch (err) {
-    if (state.selected === id) panel.replaceChildren(h("p", {}, [err.message]));
+    if (state.selected === id) panel.replaceChildren(h("p", { class: "empty" }, [err.message]));
     return;
   }
   if (state.selected !== id || state.view !== "jobs" || !panel.isConnected) return;
@@ -704,11 +704,7 @@ async function renderSources() {
     h("p", { class: "help", id: "kind-help" }, [""]),
     h("label", { class: "field" }, [h("span", {}, ["Name"]), h("input", { name: "name", type: "text", required: "true" })]),
     h("div", { id: "fields", class: "stack" }),
-    h("label", { class: "switch-field" }, [
-      h("input", { class: "switch-input", name: "enabled", type: "checkbox", checked: "checked" }),
-      h("span", { class: "switch-ui", "aria-hidden": "true" }),
-      "Enabled",
-    ]),
+    toggle("Enabled", "enabled", true),
     h("button", { class: "primary", type: "submit" }, ["Save source"]),
   ]);
   main.replaceChildren(h("div", { class: "page" }, [
@@ -824,8 +820,8 @@ async function renderProfile() {
       num("Minimum pay", "min_salary", profile.min_salary || 0),
       num("Minimum model score", "min_score", profile.min_score ?? 70),
     ]),
-    h("label", { class: "check" }, [h("input", { type: "checkbox", name: "remote_only", checked: profile.remote_only ? "checked" : null }), "Remote only"]),
-    h("label", { class: "check" }, [h("input", { type: "checkbox", name: "include_remote", checked: profile.include_remote ? "checked" : null }), "Remote roles can satisfy a location"]),
+    toggle("Remote only", "remote_only", profile.remote_only),
+    toggle("Remote roles can satisfy a location", "include_remote", profile.include_remote),
     h("p", { class: "help" }, ["Pay is compared as published, with no currency conversion. A role with no salary is kept. Keywords and excludes run before any model call."]),
     h("button", { class: "primary", type: "submit" }, ["Save profile"]),
   ]);
@@ -837,6 +833,13 @@ function field(label, name, value, placeholder) {
 }
 function num(label, name, value) {
   return h("label", { class: "field" }, [h("span", {}, [label]), h("input", { type: "number", name, value: String(value) })]);
+}
+function toggle(label, name, checked) {
+  return h("label", { class: "switch-field" }, [
+    h("input", { class: "switch-input", type: "checkbox", name, checked: checked ? "checked" : null }),
+    h("span", { class: "switch-ui", "aria-hidden": "true" }),
+    label,
+  ]);
 }
 function listSplit(value) {
   return value.split(",").map((part) => part.trim()).filter(Boolean);
@@ -915,7 +918,7 @@ async function renderContext() {
   state.settings = settings;
   const kiwi = settings.kiwi || {};
   const form = h("form", { class: "stack", onsubmit: (event) => saveKiwi(event, settings) }, [
-    h("label", { class: "check" }, [h("input", { type: "checkbox", name: "enabled", checked: kiwi.enabled ? "checked" : null }), "Also write pages to KiwiFS"]),
+    toggle("Also write pages to KiwiFS", "enabled", kiwi.enabled),
     h("label", { class: "field" }, [h("span", {}, ["KiwiFS base URL"]), h("input", { name: "base_url", type: "text", value: kiwi.base_url || "" })]),
     h("div", { class: "grid-2" }, [
       h("label", { class: "field" }, [h("span", {}, ["API key"]), h("input", { name: "api_key", type: "password", value: kiwi.api_key || "", placeholder: kiwi.key_set ? "Saved" : "" })]),
@@ -933,7 +936,7 @@ async function renderContext() {
     h("section", { class: "card" }, [form]),
     h("section", { class: "card" }, [
       h("h2", {}, ["Local folder"]),
-      h("p", {}, [ctx.local_dir || ""]),
+      h("p", { class: "mono" }, [ctx.local_dir || ""]),
       h("p", { class: "help" }, [ctx.last_sync && ctx.last_sync.at ? `Last write ${when(ctx.last_sync.at)} · ${ctx.last_sync.files || 0} files · KiwiFS ${ctx.last_sync.kiwi || "disabled"}` : "Nothing written yet. A search writes this folder when it finishes."]),
       h("h3", { id: "context-file" }, ["index.md"]),
       h("div", { id: "context-doc", class: "md" }, ["Loading…"]),
@@ -1138,9 +1141,9 @@ async function renderModel() {
     ]),
     h("label", { class: "field" }, [h("span", {}, ["API key"]), h("input", { name: "api_key", type: "password", value: llm.api_key || "", placeholder: llm.key_set ? "Saved" : "Not required for Ollama" })]),
     h("p", { class: "help" }, ["Cursor does not publish a general chat API. Point the Cursor provider at an OpenAI-compatible gateway and supply that gateway's key. Ollama uses /v1/chat/completions on the base URL."]),
-    h("label", { class: "check" }, [h("input", { type: "checkbox", name: "score_with_llm", checked: settings.score_with_llm ? "checked" : null }), "Score matches with the model"]),
-    h("label", { class: "check" }, [h("input", { type: "checkbox", name: "expand_sources", checked: settings.expand_sources ? "checked" : null }), "Let the model add a public source when fewer than 8 roles pass the rules"]),
-    h("label", { class: "check" }, [h("input", { type: "checkbox", name: "auto_research", checked: settings.auto_research ? "checked" : null }), "Brief the top matched roles during a run"]),
+    toggle("Score matches with the model", "score_with_llm", settings.score_with_llm),
+    toggle("Let the model add a public source when fewer than 8 roles pass the rules", "expand_sources", settings.expand_sources),
+    toggle("Brief the top matched roles during a run", "auto_research", settings.auto_research),
     h("div", { class: "grid-2" }, [
       num("Roles to score per run", "max_llm_jobs", settings.max_llm_jobs || 25),
       num("Cache hours (0 refetches every run)", "cache_hours", settings.cache_hours ?? 6),
